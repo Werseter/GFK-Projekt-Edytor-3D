@@ -1,4 +1,5 @@
 #include "GUI.h"
+#include "Commands.h"
 #include <vector>
 
 MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style) {
@@ -35,7 +36,7 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 
 	wxBoxSizer* bSizer3;
 	bSizer3  = new wxBoxSizer(wxVERTICAL);
-	bSizer3 -> SetMinSize(wxSize(200, 350));
+	bSizer3 -> SetMinSize(wxSize(350, 350));
 	
 	m_textCtrlObjList       = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_WORDWRAP);
 	m_textCtrlConsoleOutput = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_WORDWRAP);
@@ -54,6 +55,10 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 
 	Bind(wxEVT_TEXT_ENTER, &MyFrame::ProcessConsoleInput, this, ID_WXTEXTCTRLCONSOLE);
 	Bind(wxEVT_UPDATE_UI,  &MyFrame::Form_Update, this);
+
+	commands.push_back(new CmdCls(this));
+	commands.push_back(new CmdHelp(this));
+	commands.push_back(new CmdSphere(this));
 }
 
 MyFrame::~MyFrame() {
@@ -67,18 +72,62 @@ MyFrame::~MyFrame() {
 }
 
 void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
+	std::vector<std::string> args;
+	std::string input = std::string((m_textCtrlConsoleInput -> GetLineText(0)).c_str());
+	while (input.size()) {
+		int index = input.find(" ");
+		if (index != std::string::npos) {
+			if (input[0] != ' ') {
+				args.push_back(input.substr(0, index));
+				input = input.substr(index + 1);
+			}
+			else {
+				input = input.substr(1);
+			}
+		}
+		else {
+			args.push_back(input);
+			input = "";
+		}
+	}
 	wxStreamToTextRedirector redirect(m_textCtrlConsoleOutput);
-	std::cout << m_textCtrlConsoleInput -> GetLineText(0) << std::endl;
+	std::vector<BaseCommand*>::iterator cmdIt = std::find_if(commands.begin(), commands.end(), [&args](BaseCommand* cmd) { return cmd -> GetName() == args[0]; });
+	if (cmdIt != commands.end()) {
+		if (args.size() - 1 == (*cmdIt) -> GetNArguments() || -1 == (*cmdIt) -> GetNArguments()) {
+			if ((*cmdIt) -> Execute(args)) {
+				for (std::string& arg : args) {
+					std::cout << arg << " ";
+				}
+				std::cout << std::endl;
+			}
+		}
+		else {
+			std::cout << "Funkcja \"" << args[0] << "\" przyjmuje " << (*cmdIt) -> GetNArguments() << " argumentow (podano " << args.size() - 1 << ")" << std::endl;
+		}
+	}
+	else {
+		std::cout << "Nieznana funkcja \"" << args[0] << "\"" << std::endl;
+	}
 	m_textCtrlConsoleInput -> Clear();
+}
+
+void MyFrame::UpdateObjList() {
+	m_textCtrlObjList -> Clear();
+	for (GeoObject* obj : geoObjects) {
+		m_textCtrlObjList -> AppendText(obj -> Repr());
+		m_textCtrlObjList -> AppendText("\n");
+	}
 }
 
 void MyFrame::Draw() {
 	std::vector<wxPanel*> panels = { m_panel1, m_panel2, m_panel3, m_panel4 };
-	wxBitmap buffer = wxBitmap(m_panel1 -> GetSize());
 	for (wxPanel* panel : panels) {
-		wxClientDC _MyDC(panel);
-		wxBufferedDC MyDC(&_MyDC, buffer);
-		//MyDC.DrawBitmap(jakastambitmapazestuffemzrenderowanym, 0, 0);
+		if (panel -> GetSize().x > 0 && panel -> GetSize().y > 0) {
+			wxBitmap buffer = wxBitmap(panel -> GetSize());
+			wxClientDC _MyDC(panel);
+			wxBufferedDC MyDC(&_MyDC, buffer);
+			//MyDC.DrawBitmap(jakastambitmapazestuffemzrenderowanym, 0, 0);
+		}
 	}
 }
 

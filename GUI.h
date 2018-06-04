@@ -7,10 +7,15 @@
 #include <wx/panel.h>
 #include <wx/frame.h>
 #include <wx/dcbuffer.h>
+#include <vector>
+#include "GeoObject.h"
+
+class BaseCommand;
 
 class MyFrame : public wxFrame {
-	private:
+	public:
 		void ProcessConsoleInput(wxCommandEvent&  e);
+		void UpdateObjList();
 
 		void Draw();
 		void Form_Update(wxUpdateUIEvent& e);
@@ -27,8 +32,9 @@ class MyFrame : public wxFrame {
 		wxTextCtrl* m_textCtrlConsoleInput;
 		wxTextCtrl* m_textCtrlConsoleOutput;
 
+		std::vector<BaseCommand*> commands;
+		std::vector<GeoObject*>   geoObjects;
 
-	public:
 		MyFrame (wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(600, 400), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
 		~MyFrame();
 };

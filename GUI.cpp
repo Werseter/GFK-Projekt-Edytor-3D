@@ -37,7 +37,7 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	wxBoxSizer* bSizer3;
 	bSizer3  = new wxBoxSizer(wxVERTICAL);
 	bSizer3 -> SetMinSize(wxSize(350, 350));
-	
+
 	m_textCtrlObjList       = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_WORDWRAP);
 	m_textCtrlConsoleOutput = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_WORDWRAP);
 	m_textCtrlConsoleInput  = new wxTextCtrl(this, ID_WXTEXTCTRLCONSOLE, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
@@ -113,7 +113,7 @@ void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
 
 void MyFrame::UpdateObjList() {
 	m_textCtrlObjList -> Clear();
-	for (GeoObject* obj : geoObjects) {
+	for (BaseObject* obj : geoObjects) {
 		m_textCtrlObjList -> AppendText(obj -> Repr());
 		m_textCtrlObjList -> AppendText("\n");
 	}

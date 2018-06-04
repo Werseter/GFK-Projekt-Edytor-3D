@@ -1,4 +1,4 @@
-#include <wx/wxprec.h>
+#include <wx/wx.h>
 #include "GUI.h"
 
 class MyApp : public wxApp {
@@ -11,5 +11,5 @@ class MyApp : public wxApp {
 	}
 };
 
-wxIMPLEMENT_APP(MyApp);
+IMPLEMENT_APP(MyApp);
 //wxIMPLEMENT_APP_CONSOLE(MyApp);

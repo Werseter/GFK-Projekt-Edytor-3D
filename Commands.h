@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GUI.h"
-#include "GeoObject.h"
+#include "Objects.h"
 #include <vector>
 
 class BaseCommand {
@@ -55,7 +55,7 @@ class CmdHelp : public BaseCommand {
 class CmdSphere : public BaseCommand {
 	public:
 		CmdSphere(MyFrame* app) : BaseCommand("sphere", 6, app) {}
-		bool Execute(std::vector<std::string> args) { 
+		bool Execute(std::vector<std::string> args) {
 			std::vector<float> temp(3);
 			temp[0] = atof(args[1].c_str());
 			temp[1] = atof(args[2].c_str());

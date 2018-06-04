@@ -1,5 +1,5 @@
 #include "GUI.h"
-#include "Commands.h"
+#include "Commands/Commands.h"
 #include <vector>
 
 MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style) {
@@ -56,9 +56,22 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	Bind(wxEVT_TEXT_ENTER, &MyFrame::ProcessConsoleInput, this, ID_WXTEXTCTRLCONSOLE);
 	Bind(wxEVT_UPDATE_UI,  &MyFrame::Form_Update, this);
 
-	commands.push_back(new CmdCls(this));
-	commands.push_back(new CmdHelp(this));
-	commands.push_back(new CmdSphere(this));
+	commands.push_back(new PrintHelp(this));
+
+	commands.push_back(new SetLineColor(this));
+
+	commands.push_back(new CreateLine(this));
+	commands.push_back(new CreateBox(this));
+	commands.push_back(new CreateSphere(this));
+	commands.push_back(new CreateCone(this));
+	commands.push_back(new CreateCylinder(this));
+
+	commands.push_back(new Delete(this));
+	commands.push_back(new ClearAll(this));
+	commands.push_back(new Move(this));
+	commands.push_back(new Rotate(this));
+	commands.push_back(new Save(this));
+	commands.push_back(new Load(this));
 }
 
 MyFrame::~MyFrame() {
@@ -93,7 +106,7 @@ void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
 	wxStreamToTextRedirector redirect(m_textCtrlConsoleOutput);
 	std::vector<BaseCommand*>::iterator cmdIt = std::find_if(commands.begin(), commands.end(), [&args](BaseCommand* cmd) { return cmd -> GetName() == args[0]; });
 	if (cmdIt != commands.end()) {
-		if (args.size() - 1 == (*cmdIt) -> GetNArguments() || -1 == (*cmdIt) -> GetNArguments()) {
+		if (args.size() - 1 == (*cmdIt) -> GetArgumentsCount() || -1 == (*cmdIt) -> GetArgumentsCount()) {
 			if ((*cmdIt) -> Execute(args)) {
 				for (std::string& arg : args) {
 					std::cout << arg << " ";
@@ -102,7 +115,7 @@ void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
 			}
 		}
 		else {
-			std::cout << "Funkcja \"" << args[0] << "\" przyjmuje " << (*cmdIt) -> GetNArguments() << " argumentow (podano " << args.size() - 1 << ")" << std::endl;
+			std::cout << "Funkcja \"" << args[0] << "\" przyjmuje " << (*cmdIt) -> GetArgumentsCount() << " argumentow (podano " << args.size() - 1 << ")" << std::endl;
 		}
 	}
 	else {

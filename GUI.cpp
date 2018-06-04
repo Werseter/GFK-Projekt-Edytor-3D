@@ -68,7 +68,7 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 
 	commands.push_back(new Delete(this));
 	commands.push_back(new ClearAll(this));
-	commands.push_back(new Move(this));
+	commands.push_back(new MoveObj(this));
 	commands.push_back(new Rotate(this));
 	commands.push_back(new Save(this));
 	commands.push_back(new Load(this));
@@ -115,11 +115,11 @@ void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
 			}
 		}
 		else {
-			std::cout << "Funkcja \"" << args[0] << "\" przyjmuje " << (*cmdIt) -> GetArgumentsCount() << " argumentow (podano " << args.size() - 1 << ")" << std::endl;
+			std::cout << "Function \"" << args[0] << "\" takes " << (*cmdIt) -> GetArgumentsCount() << " arguments (" << args.size() - 1 << " given)" << std::endl;
 		}
 	}
 	else {
-		std::cout << "Nieznana funkcja \"" << args[0] << "\"" << std::endl;
+		std::cout << "Unknown function \"" << args[0] << "\"" << std::endl;
 	}
 	m_textCtrlConsoleInput -> Clear();
 }

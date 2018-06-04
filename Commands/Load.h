@@ -5,13 +5,13 @@
 // load command loading object from a file
 class Load : public BaseCommand {
 	public:
-    // Initializing load command
+		// Initializing load command
 		Load(MyFrame* app) : BaseCommand("load", 1, app) {}
 
-    // Overrided Execute method, loads object from file
-		bool Execute(std::vector<std::string> args) { }
+		// Overridden Execute method, loads object from file
+		bool Execute(std::vector<std::string> args) { return true; }
 
-    // Overrided documentation methods
+		// Overridden documentation methods
 		std::string Args() const { return "file_name"; }
 		std::string Help() const { return "Loads object from file of name file_name"; }
 };

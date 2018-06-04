@@ -5,9 +5,9 @@
 class Box : public BaseObject {
 	protected:
 		// Fields describing box's properties
-    // Two vectors of three points each, one starting, one ending
+		// Two vectors of three points each, one starting, one ending
 		std::vector<float> start;
-    std::vector<float> end;
+		std::vector<float> end;
 
 	public:
 		// Box is constructed with basic properties

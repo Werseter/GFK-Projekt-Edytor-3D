@@ -5,9 +5,9 @@
 class Line : public BaseObject {
 	protected:
 		// Fields describing line's properties
-    // Two vectors of three points each, one starting, one ending
+		// Two vectors of three points each, one starting, one ending
 		std::vector<float> start;
-    std::vector<float> end;
+		std::vector<float> end;
 
 	public:
 		// Line is constructed with basic properties

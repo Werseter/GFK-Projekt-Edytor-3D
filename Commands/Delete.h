@@ -5,13 +5,13 @@
 // delete command deleting an object of a given id
 class Delete : public BaseCommand {
 	public:
-    // Initializing delete command
+		// Initializing delete command
 		Delete(MyFrame* app) : BaseCommand("delete", 1, app) {}
 
-    // Overrided Execute method, deletes an object
-		bool Execute(std::vector<std::string> args) { }
+		// Overridden Execute method, deletes an object
+		bool Execute(std::vector<std::string> args) { return true; }
 
-    // Overrided documentation methods
+		// Overridden documentation methods
 		std::string Args() const { return "id"; }
-		std::string Help() const { return "Deletes an object of a given id"; }
+		std::string Help() const { return "Deletes an object with a given id"; }
 };

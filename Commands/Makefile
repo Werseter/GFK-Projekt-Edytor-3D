@@ -14,7 +14,7 @@ OBJ=$(SRC:.cpp=.o)
 DEP=$(SRC:.cpp=.d)
 
 all: $(OBJ)
-	$(CXX) $(LFLAGS) -c $?
+	$(CXX) -c $?
 
 .PHONY: clean run
 

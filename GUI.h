@@ -8,6 +8,7 @@
 #include <wx/frame.h>
 #include <wx/dcbuffer.h>
 #include <vector>
+#include <algorithm>
 #include "Objects3D/BaseObject.h"
 
 class BaseCommand;

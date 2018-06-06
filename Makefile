@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS+=--O0 $(GXX_FLAGS)
+CXXFLAGS+=-O0 $(GXX_FLAGS)
 CXXFLAGS+=-g -ggdb -std=c++11
 CXXFLAGS+=`wx-config --cxxflags --libs std`
 

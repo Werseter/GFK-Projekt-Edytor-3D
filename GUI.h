@@ -10,7 +10,7 @@
 #include <wx/gdicmn.h>
 #include <algorithm>
 #include <vector>
-#include "Objects3D/BaseObject.h"
+#include "BaseObject.h"
 #include "vecmat.h"
 
 class BaseCommand;

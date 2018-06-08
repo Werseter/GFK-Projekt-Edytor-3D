@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../GUI.h"
-#include "../Objects3D/Objects.h"
 #include <vector>
 
 // Base class for various commands

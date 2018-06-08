@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseCommand.h"
+#include "../Objects3D/Sphere.h"
 
 // sphere command creating a sphere based on given arguments
 class CreateSphere : public BaseCommand {
@@ -11,16 +12,17 @@ class CreateSphere : public BaseCommand {
 	    // Overriden execute method
 		bool Execute(std::vector<std::string> args) {
 			// First we get x, y, z coordinates
-			std::vector<float> coordinates(3);
+			Data3D coordinates(3);
 			coordinates[0] = atof(args[1].c_str());
 			coordinates[1] = atof(args[2].c_str());
 			coordinates[2] = atof(args[3].c_str());
 
 			// And then, using also the rest of arguments, we create a new sphere object
-			app -> geoObjects.push_back(new Sphere(coordinates, atof(args[4].c_str()), atoi(args[5].c_str()), atoi(args[6].c_str())));
+			Sphere* sphere = new Sphere(coordinates, atof(args[4].c_str()), atoi(args[5].c_str()), atoi(args[6].c_str()));
+			app -> geoObjects.push_back(sphere);
 
 			// Then we can update the object list
-			app -> UpdateObjList();
+			app -> UpdateObjList(sphere);
 
 			return true;
 		}

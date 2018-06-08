@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseCommand.h"
+#include "../Objects3D/Cylinder.h"
 
 // cylinder command creating a cylinder based on given arguments
 class CreateCylinder : public BaseCommand {
@@ -11,22 +12,23 @@ class CreateCylinder : public BaseCommand {
 		// Overridden execute method
 		bool Execute(std::vector<std::string> args) {
 			// First we get starting coordinates
-			std::vector<float> start(3);
+			Data3D start(3);
 			start[0] = atof(args[1].c_str());
 			start[1] = atof(args[2].c_str());
 			start[2] = atof(args[3].c_str());
 
 			// And then ending coordinates
-			std::vector<float> end(3);
+			Data3D end(3);
 			end[0] = atof(args[4].c_str());
 			end[1] = atof(args[5].c_str());
 			end[2] = atof(args[6].c_str());
 
 			// Then we create a new cylinder object
-			app -> geoObjects.push_back(new Cylinder(start, end, atof(args[7].c_str()), atoi(args[8].c_str())));
+			Cylinder* cylinder = new Cylinder(start, end, atof(args[7].c_str()), atoi(args[8].c_str()));
+			app -> geoObjects.push_back(cylinder);
 
 			// Then we can update the object list
-			app -> UpdateObjList();
+			app -> UpdateObjList(cylinder);
 
 			return true;
 		}

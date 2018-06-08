@@ -11,7 +11,7 @@ class MoveObj : public BaseCommand {
 		// Overridden Execute method, loads object from file
 		bool Execute(std::vector<std::string> args) {
 			// First we get the vector
-			std::vector<float> vec(3);
+			Data3D vec(3);
 			vec[0] = atof(args[2].c_str());
 			vec[1] = atof(args[3].c_str());
 			vec[2] = atof(args[4].c_str());

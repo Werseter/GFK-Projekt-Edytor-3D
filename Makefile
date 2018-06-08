@@ -1,37 +1,37 @@
 CXX=g++
-CXXFLAGS+=-O0 $(GXX_FLAGS)
-CXXFLAGS+=-g -ggdb -std=c++11
-CXXFLAGS+=`wx-config --cxxflags --libs std`
+CXX_FLAGS+=-O0 $(GXX_FLAGS)
+CXX_FLAGS+=-g -ggdb -std=c++11
+CXX_FLAGS+=`wx-config --cxxflags --libs std`
+DEP_FLAGS=-MMD -MP
 
-DEP_FLAGS=-MMD
-
-EXECNAME=Projekt21
-
-DEP_FLAGS+=-MP
-
-CXXFLAGS+=$(DEP_FLAGS)
+EXECNAME=Projekt45
+BUILD_DIR=./build
 
 SRC=$(wildcard *.cpp) $(wildcard Commands/*.cpp) $(wildcard Objects3D/*.cpp)
-OBJ=$(SRC:.cpp=.o)
-DEP=$(SRC:.cpp=.d)
+OBJ=$(SRC:%.cpp=$(BUILD_DIR)/%.o)
+DEP=$(OBJ:%.o=%.d)
 
 all: $(EXECNAME)
 
-$(EXECNAME): $(OBJ)
-	+$(MAKE) -C Objects3D
-	+$(MAKE) -C Commands
-	$(CXX) $(CXXFLAGS) $(LFLAGS) $? -o $@
+$(EXECNAME) : $(BUILD_DIR)/$(EXECNAME)
+
+$(BUILD_DIR)/$(EXECNAME) : $(OBJ)
+	mkdir -p $(@D)
+	$(CXX) $(CXX_FLAGS) $^ -o $@
+
+-include $(DEP)
+
+$(BUILD_DIR)/%.o : %.cpp
+	mkdir -p $(@D)
+	$(CXX) $(CXX_FLAGS) $(DEP_FLAGS) -c $< -o $@
 
 .PHONY: clean run
 
 clean:
-	+$(MAKE) -C Objects3D clean
-	+$(MAKE) -C Commands clean
-	rm -f $(EXECNAME) $(OBJ) $(DEP)
+	rm -f $(BUILD_DIR)/$(EXECNAME) $(OBJ) $(DEP)
 
 run: $(EXECNAME)
-	./$(EXECNAME)
+	$(BUILD_DIR)/$(EXECNAME)
 
--include $(DEP)
 
 

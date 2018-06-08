@@ -14,22 +14,11 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	bSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	gSizer1 = new wxGridSizer(2, 2, 0, 0);
 
-	m_panel1  = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-	m_panel1 -> SetBackgroundColour(wxColour(255, 255, 255));
-
-	m_panel2  = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-	m_panel2 -> SetBackgroundColour(wxColour(255, 255, 255));
-
-	m_panel3  = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-	m_panel3 -> SetBackgroundColour(wxColour(255, 255, 255));
-
-	m_panel4  = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-	m_panel4 -> SetBackgroundColour(wxColour(255, 255, 255));
-
-	gSizer1 -> Add(m_panel1, 1, wxBOTTOM | wxEXPAND | wxRIGHT, 1);
-	gSizer1 -> Add(m_panel2, 1, wxBOTTOM | wxEXPAND | wxLEFT,  1);
-	gSizer1 -> Add(m_panel3, 1, wxEXPAND | wxRIGHT  | wxTOP,   1);
-	gSizer1 -> Add(m_panel4, 1, wxEXPAND | wxLEFT   | wxTOP,   1);
+	for(int i = 0; i < 4; ++i) {
+		m_panels.push_back(new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL));
+		m_panels.back() -> SetBackgroundColour(wxColour(255, 255, 255));
+		gSizer1 -> Add(m_panels.back(), 1, wxBOTTOM | wxEXPAND | wxRIGHT, 1);
+	}
 
 	bSizer2 -> Add(gSizer1, 1, wxEXPAND, 5);
 	bSizer1 -> Add(bSizer2, 1, wxEXPAND, 5);
@@ -56,6 +45,8 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	Bind(wxEVT_TEXT_ENTER, &MyFrame::ProcessConsoleInput, this, ID_WXTEXTCTRLCONSOLE);
 	Bind(wxEVT_UPDATE_UI,  &MyFrame::Form_Update, this);
 
+	GenerateDefaultPanelCasters();
+
 	commands.push_back(new PrintHelp(this));
 
 	commands.push_back(new SetLineColor(this));
@@ -75,13 +66,41 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 }
 
 MyFrame::~MyFrame() {
-	delete m_panel1;
-	delete m_panel2;
-	delete m_panel3;
-	delete m_panel4;
+	std::for_each(m_panels.begin(), m_panels.end(), [](wxPanel* x) { delete x; });
+	m_panels.clear();
+	panelCasters.clear();
+	std::for_each(commands.begin(), commands.end(), [](BaseCommand* x) { delete x; });
+	commands.clear();
+	std::for_each(geoObjects.begin(), geoObjects.end(), [](BaseObject* x) { delete x; });
+	geoObjects.clear();
 	delete m_textCtrlObjList;
 	delete m_textCtrlConsoleInput;
 	delete m_textCtrlConsoleOutput;
+}
+
+void MyFrame::GenerateDefaultPanelCasters() {
+	for (int i = 0; i < 1; ++i) {
+
+		Matrix4 transform1;
+		transform1.data[0][0] = 1;
+		transform1.data[1][1] = 1;
+		transform1.data[2][2] = 1;
+		transform1.data[2][3] = -2;
+
+		Matrix4 transform2;
+		transform2.data[0][(0+i)%3] = 1;
+		transform2.data[1][(1+i)%3] = 1;
+		transform2.data[3][(2+i)%3] = 1.0 / -2;
+
+		Matrix4 transform3;
+		wxSize panelSize = m_panels[i] -> GetSize();
+		transform3.data[0][0] =  panelSize.GetWidth () / 2;
+		transform3.data[1][1] = -panelSize.GetHeight() / 2;
+		transform3.data[0][3] =  transform3.data[0][0];
+		transform3.data[1][3] = -transform3.data[1][1];
+		
+		panelCasters.push_back(transform3 * transform2 * transform1);
+	}
 }
 
 void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
@@ -132,14 +151,33 @@ void MyFrame::UpdateObjList() {
 	}
 }
 
+void MyFrame::UpdateObjList(BaseObject* obj) {
+	m_textCtrlObjList -> AppendText(obj -> Repr());
+	m_textCtrlObjList -> AppendText("\n");
+	drawingData.push_back(obj -> GetData());
+}
+
+
 void MyFrame::Draw() {
-	std::vector<wxPanel*> panels = { m_panel1, m_panel2, m_panel3, m_panel4 };
-	for (wxPanel* panel : panels) {
-		if (panel -> GetSize().x > 0 && panel -> GetSize().y > 0) {
+	Vector4 pt1, pt2;
+	for (wxPanel* panel : m_panels) {
+		if (panel -> GetSize().x > 0 && panel -> GetSize().y > 0 && drawingData.size() > 0) {
 			wxBitmap buffer = wxBitmap(panel -> GetSize());
 			wxClientDC _MyDC(panel);
 			wxBufferedDC MyDC(&_MyDC, buffer);
-			//MyDC.DrawBitmap(jakastambitmapazestuffemzrenderowanym, 0, 0);
+			MyDC.SetBackground(*wxBLACK_BRUSH);
+			MyDC.Clear();
+			MyDC.SetPen(wxPen(drawingColor));
+			for (const DataVector* data : drawingData) {
+				for (Data3D points : *data) {
+					pt1.Set(points[0], points[1], points[2]);
+					pt2.Set(points[3], points[4], points[5]);
+					pt1 = (panelCasters[0] * pt1).Normalize();
+					pt2 = (panelCasters[0] * pt2).Normalize();
+					MyDC.DrawLine(pt1.GetX(), pt1.GetY(), pt2.GetX(), pt2.GetY());
+				}
+			}
+			break;
 		}
 	}
 }

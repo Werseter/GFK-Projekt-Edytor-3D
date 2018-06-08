@@ -11,13 +11,13 @@ class Rotate : public BaseCommand {
 		// Overridden Execute method, rotates an object
 		bool Execute(std::vector<std::string> args) {
 			// First we get the point's coordinates
-			std::vector<float> coordinates(3);
+			Data3D coordinates(3);
 			coordinates[0] = atof(args[2].c_str());
 			coordinates[1] = atof(args[3].c_str());
 			coordinates[2] = atof(args[4].c_str());
 
 			// Then angles
-			std::vector<float> angles(3);
+			Data3D angles(3);
 			angles[0] = atof(args[5].c_str());
 			angles[1] = atof(args[6].c_str());
 			angles[2] = atof(args[7].c_str());

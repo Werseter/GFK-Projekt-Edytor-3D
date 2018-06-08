@@ -25,7 +25,17 @@ class Rotate : public BaseCommand {
 			// And then the id
 			unsigned int id = atoi(args[1].c_str());
 
-			return true;
+			std::vector<BaseObject*>::iterator objIt = std::find_if(app -> geoObjects.begin(), app -> geoObjects.end(), [&id](BaseObject* obj) { return obj -> GetId() == id; });
+			if (objIt != app -> geoObjects.end()) {
+				(*objIt) -> Rotate(coordinates, angles);
+				return true;
+			}
+			else {
+				wxStreamToTextRedirector redirect(app -> m_textCtrlConsoleOutput);
+				std::cout << "Object with id \"" << id << "\" has not been found" << std::endl;
+				return false;
+			}
+
 		}
 
 		// Overridden documentation methods

@@ -79,13 +79,13 @@ MyFrame::~MyFrame() {
 }
 
 void MyFrame::GenerateDefaultPanelCasters() {
-	for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < 3; ++i) {
 
 		Matrix4 transform1;
 		transform1.data[0][0] = 1;
 		transform1.data[1][1] = 1;
 		transform1.data[2][2] = 1;
-		transform1.data[2][3] = -2;
+		transform1.data[(2+i)%3][3] = -2;
 
 		Matrix4 transform2;
 		transform2.data[0][(0+i)%3] = 1;
@@ -98,8 +98,21 @@ void MyFrame::GenerateDefaultPanelCasters() {
 		transform3.data[1][1] = -panelSize.GetHeight() / 2;
 		transform3.data[0][3] =  transform3.data[0][0];
 		transform3.data[1][3] = -transform3.data[1][1];
-		
-		panelCasters.push_back(transform3 * transform2 * transform1);
+
+		if (i == 2) {
+			Matrix4 transform4;
+			float angle = 90 * acosf(-1) / 180;
+			transform4.data[0][0] =  cos(angle);
+			transform4.data[2][2] =  transform4.data[0][0];
+			transform4.data[2][0] =  sin(angle);
+			transform4.data[0][2] = -transform4.data[2][0];
+			transform4.data[1][1] =  1;
+
+			panelCasters.push_back(transform3 * transform2 * transform1 * transform4);
+		}
+		else {
+			panelCasters.push_back(transform3 * transform2 * transform1);
+		}
 	}
 }
 
@@ -160,24 +173,25 @@ void MyFrame::UpdateObjList(BaseObject* obj) {
 
 void MyFrame::Draw() {
 	Vector4 pt1, pt2;
-	for (wxPanel* panel : m_panels) {
-		if (panel -> GetSize().x > 0 && panel -> GetSize().y > 0 && drawingData.size() > 0) {
-			wxBitmap buffer = wxBitmap(panel -> GetSize());
-			wxClientDC _MyDC(panel);
+	for (int i = 0; i < 4; ++i) {
+		if (m_panels[i] -> GetSize().x > 0 && m_panels[i] -> GetSize().y > 0) {
+			wxBitmap buffer = wxBitmap(m_panels[i] -> GetSize());
+			wxClientDC _MyDC(m_panels[i]);
 			wxBufferedDC MyDC(&_MyDC, buffer);
 			MyDC.SetBackground(*wxBLACK_BRUSH);
 			MyDC.Clear();
 			MyDC.SetPen(wxPen(drawingColor));
-			for (const DataVector* data : drawingData) {
-				for (Data3D points : *data) {
-					pt1.Set(points[0], points[1], points[2]);
-					pt2.Set(points[3], points[4], points[5]);
-					pt1 = (panelCasters[0] * pt1).Normalize();
-					pt2 = (panelCasters[0] * pt2).Normalize();
-					MyDC.DrawLine(pt1.GetX(), pt1.GetY(), pt2.GetX(), pt2.GetY());
+			if (i != 3) {
+				for (const DataVector* data : drawingData) {
+					for (Data3D points : *data) {
+						pt1.Set(points[0], points[1], points[2]);
+						pt2.Set(points[3], points[4], points[5]);
+						pt1 = (panelCasters[i] * pt1).Normalize();
+						pt2 = (panelCasters[i] * pt2).Normalize();
+						MyDC.DrawLine(pt1.GetX(), pt1.GetY(), pt2.GetX(), pt2.GetY());
+					}
 				}
 			}
-			break;
 		}
 	}
 }

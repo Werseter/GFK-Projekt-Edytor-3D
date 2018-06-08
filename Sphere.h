@@ -19,4 +19,10 @@ class Sphere : public BaseObject {
 		std::string Repr() const { return BaseObject::Repr() + GetCoordinatesString(pos) + " " + toString(radius); }
 
 		void GeneratePoints() {}
+
+		void MoveOrigins(Data3D vec) {
+			for (int i = 0; i < 3; ++i) {
+				pos[i] += vec[i];
+			}
+		}
 };

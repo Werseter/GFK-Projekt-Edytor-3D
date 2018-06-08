@@ -23,4 +23,11 @@ class Cylinder : public BaseObject {
 		std::string Repr() const { return BaseObject::Repr() + GetCoordinatesString(start) + " " + GetCoordinatesString(end) + " " + toString(radius); }
 
 		void GeneratePoints() {}
+
+		void MoveOrigins(Data3D vec) {
+			for (int i = 0; i < 3; ++i) {
+				start[i] += vec[i];
+				end[i]   += vec[i];
+			}
+		}
 };

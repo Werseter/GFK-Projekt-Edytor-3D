@@ -9,21 +9,21 @@ void Vector4::Print() const {
 	printf("(%2.3lf,%2.3lf,%2.3lf,%2.3lf)", data[0], data[1], data[2], data[3]);
 }
 
-void Vector4::Set(double d1, double d2, double d3) {
+void Vector4::Set(float d1, float d2, float d3) {
  data[0] = d1;
  data[1] = d2;
  data[2] = d3;
 }
 
-double Vector4::GetX() const {
+float Vector4::GetX() const {
 	return data[0];
 }
 
-double Vector4::GetY() const {
+float Vector4::GetY() const {
 	return data[1];
 }
 
-double Vector4::GetZ() const {
+float Vector4::GetZ() const {
 	return data[2];
 }
 
@@ -43,7 +43,7 @@ Vector4 Vector4::operator- (const Vector4& gVector) const {
 	return Result;
 }
 
-Vector4 operator* (const Vector4& gVector, double val) {
+Vector4 operator* (const Vector4& gVector, float val) {
 	Vector4 Result;
 	for (int i = 0; i < 4; ++i) {
 		Result.data[i] = gVector.data[i] * val;

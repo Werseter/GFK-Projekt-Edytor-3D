@@ -24,4 +24,11 @@ class Cone : public BaseObject {
 		std::string Repr() const { return BaseObject::Repr() + GetCoordinatesString(start) + " " + toString(radius1) + " " + GetCoordinatesString(end) + " " + toString(radius2); }
 
 		void GeneratePoints() {}
+
+		void MoveOrigins(Data3D vec) {
+			for (int i = 0; i < 3; ++i) {
+				start[i] += vec[i];
+				end[i]   += vec[i];
+			}
+		}
 };

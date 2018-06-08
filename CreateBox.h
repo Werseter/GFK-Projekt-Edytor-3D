@@ -21,7 +21,7 @@ class CreateBox : public BaseCommand {
 			Data3D end(3);
 			end[0] = atof(args[4].c_str());
 			end[1] = atof(args[5].c_str());
-			end[2] = atof(args[5].c_str());
+			end[2] = atof(args[6].c_str());
 			
 			// Then we create a new box object
 			Box* box = new Box(start, end);

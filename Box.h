@@ -32,4 +32,11 @@ class Box : public BaseObject {
 				}
 			}
 		}
+
+		void MoveOrigins(Data3D vec) {
+			for (int i = 0; i < 3; ++i) {
+				start[i] += vec[i];
+				end[i]   += vec[i];
+			}
+		}
 };

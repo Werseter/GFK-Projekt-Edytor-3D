@@ -177,7 +177,7 @@ void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
 				}
 
 				// If it wasn't possible to execute funtion tell user
-				else std::cout << "Couldn't execute function, check arguments and function help";
+				else std::cout << "Couldn't execute function, check arguments and function help" << std::endl;
 
 			}
 

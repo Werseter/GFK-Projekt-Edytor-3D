@@ -9,7 +9,7 @@ class Delete : public BaseCommand {
 		Delete(MyFrame* app) : BaseCommand("delete", 1, app) {}
 
 		// Overridden Execute method, deletes an object
-		bool Execute(std::vector<std::string> args) { return true; }
+		bool Execute(std::vector<std::string> args) { app->UpdateObjList(); return true; }
 
 		// Overridden documentation methods
 		std::string Args() const { return "id"; }

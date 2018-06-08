@@ -17,10 +17,21 @@ class BaseCommand;
 
 class MyFrame : public wxFrame {
 	public:
-		void ProcessConsoleInput(wxCommandEvent&  e);
+		// Functions maintaing what is written on a console
+		// Updates the whole list (used in delete)
 		void UpdateObjList();
+		// Pushes back new object
 		void UpdateObjList(BaseObject* obj);
+
 		void GenerateDefaultPanelCasters();
+
+		// PARSER
+		// Main function processing responsible for processing input
+		void ProcessConsoleInput(wxCommandEvent&  e);
+	  // Helper function checking if argument given as a string is integer or double
+	  bool isNumber(const std::string& s);
+	  // Function using isNumber to determine whether given arguments were correct
+	  bool CheckArgumentsIfIntOrDouble(std::vector<std::string> args);
 
 		void Draw();
 		void Form_Update(wxUpdateUIEvent& e);

@@ -176,6 +176,9 @@ void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
 					std::cout << std::endl;
 				}
 
+				// If it wasn't possible to execute funtion tell user
+				else std::cout << "Couldn't execute function, check arguments and function help";
+
 			}
 
 			// If arguments had bad format tell user about the right format and print given arguments

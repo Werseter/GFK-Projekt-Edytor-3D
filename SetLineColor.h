@@ -16,6 +16,9 @@ class SetLineColor : public BaseCommand {
 			rgb[1] = atoi(args[2].c_str());
 			rgb[2] = atoi(args[3].c_str());
 
+			for (unsigned int i=0; i<rgb.size(); ++i)
+				if (rgb[i]<0 || rgb[i]>255) return false;
+
 			app->drawingColor.Set(rgb[0], rgb[1], rgb[2]);
 
 			return true;
@@ -23,5 +26,5 @@ class SetLineColor : public BaseCommand {
 
 		// Overridden documentation methods
 		std::string Args() const { return "r g b"; }
-		std::string Help() const { return "Sets pen color"; }
+		std::string Help() const { return "Sets pen color, values r g b need to be between 0 and 255"; }
 };

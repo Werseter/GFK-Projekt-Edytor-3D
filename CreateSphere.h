@@ -28,6 +28,6 @@ class CreateSphere : public BaseCommand {
 		}
 
 		// Overriden documentation methods
-		std::string Args() const { return "(x, y, z), radius, (meridians, parallels)"; }
+		std::string Args() const { return "x y z radius meridians parallels"; }
 		std::string Help() const { return "Creates sphere object with a middle of coordinates (x, y, z) and a given radius. The sphere will be divided into given meridians and parallels"; }
 };

@@ -34,6 +34,6 @@ class CreateLine : public BaseCommand {
 		}
 
 		// Overridden documentation methods
-		std::string Args() const { return "(x1, y1, z1), (x2, y2, z2)"; }
+		std::string Args() const { return "x1 y1 z1 x2 y2 z2"; }
 		std::string Help() const { return "Creates line object using coordinates for starting point - (x1, y1, z1) and ending point - (x2, y2, z2)."; }
 };

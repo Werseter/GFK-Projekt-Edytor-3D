@@ -22,7 +22,7 @@ class CreateBox : public BaseCommand {
 			end[0] = atof(args[4].c_str());
 			end[1] = atof(args[5].c_str());
 			end[2] = atof(args[5].c_str());
-			
+
 			// Then we create a new box object
 			Box* box = new Box(start, end);
 			app -> geoObjects.push_back(box);
@@ -33,6 +33,6 @@ class CreateBox : public BaseCommand {
 		}
 
 		// Overridden documentation methods
-		std::string Args() const { return "(x1, y1, z1), (x2, y2, z2)"; }
+		std::string Args() const { return "x1 y1 z1 x2 y2 z2"; }
 		std::string Help() const { return "Creates box object using two sets of coordinates: (x1, y1, z1) and (x2, y2, z2)."; }
 };

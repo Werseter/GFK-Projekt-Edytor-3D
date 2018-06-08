@@ -34,6 +34,6 @@ class CreateCylinder : public BaseCommand {
 		}
 
 		// Overridden documentation methods
-		std::string Args() const { return "(x1, y1, z1), (x2, y2, z2), radius, nTetragons"; }
+		std::string Args() const { return "x1 y1 z1 x2 y2 z2 radius nTetragons"; }
 		std::string Help() const { return "Creates cylinder object using two sets of coordinates for bases: (x1, y1, z1) and (x2, y2, z2) - with a given radius. The cylinder will be divided into given number of tetragons"; }
 };

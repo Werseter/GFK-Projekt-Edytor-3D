@@ -34,6 +34,6 @@ class CreateCone : public BaseCommand {
 		}
 
 		// Overridden documentation methods
-		std::string Args() const { return "(x1, y1, z1), radius1, (x2, y2, z2), radius1, nTetragons"; }
+		std::string Args() const { return "x1 y1 z1 radius1 x2 y2 z2 radius1 nTetragons"; }
 		std::string Help() const { return "Creates cone object using two sets of coordinates for bases: (x1, y1, z1) - with radius 1 - and (x2, y2, z2) - with radius2. The cone will be divided into given number of tetragons"; }
 };

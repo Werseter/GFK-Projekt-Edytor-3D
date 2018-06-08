@@ -1,5 +1,6 @@
 #pragma once
 #include <stdio.h>
+#include <cmath>
 
 class Vector4 {
 	public:

@@ -25,7 +25,7 @@ class Rotate : public BaseCommand {
 			// And then the id
 			unsigned int id = atoi(args[1].c_str());
 
-			std::vector<BaseObject*>::iterator objIt = std::find_if(app -> geoObjects.begin(), app -> geoObjects.end(), [&id](BaseObject* obj) { return obj -> GetId() == id; });
+			std::vector<BaseObject*>::iterator objIt = std::find_if(app -> geoObjects.begin(), app -> geoObjects.end(), [&id](BaseObject* obj) { if (obj) return obj -> GetId() == id; else return false; });
 			if (objIt != app -> geoObjects.end()) {
 				(*objIt) -> Rotate(coordinates, angles);
 				return true;

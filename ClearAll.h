@@ -9,11 +9,22 @@ class ClearAll : public BaseCommand {
 		ClearAll(MyFrame* app) : BaseCommand("clear_all", 0, app) {}
 
 		// Overridden Execute method, clears everything in the console
-		bool Execute(std::vector<std::string> args) { app -> m_textCtrlConsoleOutput -> Clear(); return false; }
+		bool Execute(std::vector<std::string> args) {
+
+			for (BaseObject*& obj: app->geoObjects) {
+				delete obj;
+				obj = nullptr;
+			}
+
+			app->UpdateObjList();
+
+			app -> m_textCtrlConsoleOutput -> Clear();
+			return false;
+		}
 
 		// Overridden Args() method returning an empty string -- clear_all takes 0 arguments
 		std::string Args() const { return ""; }
 
 		// Overridden documentation method
-		std::string Help() const { return "Clears the console"; }
+		std::string Help() const { return "Deletes all objects and clears the console"; }
 };

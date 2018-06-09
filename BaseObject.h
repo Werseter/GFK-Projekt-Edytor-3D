@@ -31,13 +31,13 @@ class BaseObject {
 		// Object initializes with id and a type
 		BaseObject(std::string type) : objId(idCounter++), type(type) { }
 
-		unsigned int GetId() const { return objId; }
-
-		// Method for printing object's representation
-		virtual std::string Repr() const { return toString(objId) + " " + type + " "; }
-
 		// Method returning cordinates in a string
 		std::string GetCoordinatesString(Data3D v) const { return "(" + toString(v[0]) + ", " + toString(v[1]) + ", " + toString(v[2]) + ")"; }
+		//Method returning rendering data
+		const DataVector* GetData() const { return &points; }
+		unsigned int GetId() const { return objId; }
+		// Method for printing object's representation
+		virtual std::string Repr() const { return toString(objId) + " " + type + " "; }
 
 		// Method rotating an object
 		void Rotate(Data3D pos, Data3D angles) {
@@ -109,10 +109,6 @@ class BaseObject {
 		}
 
 		virtual void MoveOrigins(Data3D vec) = 0;
-
-		//Method returning rendering data
-		const DataVector* GetData() const { return &points; }
-
 		// Method converting object data into rendering points
 		virtual void GeneratePoints() = 0;
 

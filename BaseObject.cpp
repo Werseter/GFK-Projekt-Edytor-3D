@@ -1,3 +1,3 @@
 #include "BaseObject.h"
 
-unsigned int BaseObject::idCounter = 0;
+int BaseObject::idCounter = -5;

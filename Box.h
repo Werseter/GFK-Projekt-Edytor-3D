@@ -12,7 +12,7 @@ class Box : public BaseObject {
 		Data3D end;
 
 	public:
-		Box() : BaseObject("box", false) {}
+		Box() : BaseObject("box") {}
 		// Box is constructed with basic properties
 		Box(Data3D start, Data3D end) : BaseObject("box"), start(start), end(end) { GeneratePoints(); }
 
@@ -42,6 +42,18 @@ class Box : public BaseObject {
 			}
 		}
 
+		void RotationShift(Matrix4 transform) {
+			Vector4 pt, pt2;
+			pt.Set(start[0], start[1], start[2]);
+			pt = transform * pt - pt;
+			pt2.Set(end[0], end[1], end[2]);
+			pt2 = transform * pt2 - pt2;
+			for (int i = 0; i < 3; ++i) {
+				start[i] += pt.data[i];
+				end[i]   += pt2.data[i];
+			}
+		}
+
 		std::string GetSaveData() const {
 			std::stringstream data;
 			data << BaseObject::GetSaveData();
@@ -63,6 +75,7 @@ class Box : public BaseObject {
 				ss >> end[i];
 			}
 			GeneratePoints();
+			Rotate(rotations);
 		}
 
 		Box* Copy() const { return new Box(); }

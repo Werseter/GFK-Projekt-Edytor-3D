@@ -22,6 +22,7 @@ class MoveObj : public BaseCommand {
 			std::vector<BaseObject*>::iterator objIt = std::find_if(app -> geoObjects.begin(), app -> geoObjects.end(), [&id](BaseObject* obj) { if (obj) return obj -> GetId() == id; else return false; });
 			if (objIt != app -> geoObjects.end()) {
 				(*objIt) -> Move(vec);
+				app -> UpdateObjList();
 				return true;
 			}
 			else {

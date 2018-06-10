@@ -18,7 +18,7 @@ class CreateSphere : public BaseCommand {
 			coordinates[2] = atof(args[3].c_str());
 
 			// And then, using also the rest of arguments, we create a new sphere object
-			Sphere* sphere = new Sphere(coordinates, atof(args[4].c_str()), atoi(args[5].c_str()), atoi(args[6].c_str()));
+			Sphere* sphere = new Sphere(coordinates, atof(args[4].c_str()), atof(args[5].c_str()), atoi(args[6].c_str()));
 			app -> geoObjects.push_back(sphere);
 
 			// Then we can update the object list

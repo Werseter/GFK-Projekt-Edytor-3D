@@ -24,7 +24,7 @@ class CreateCone : public BaseCommand {
 			end[2] = atof(args[7].c_str());
 
 			// Then we create a new cone object
-			Cone* cone = new Cone(start, end, atof(args[4].c_str()), atoi(args[8].c_str()), atoi(args[9].c_str()));
+			Cone* cone = new Cone(start, end, atof(args[4].c_str()), atof(args[8].c_str()), atoi(args[9].c_str()));
 			app -> geoObjects.push_back(cone);
 
 			// Then we can update the object list
@@ -34,6 +34,6 @@ class CreateCone : public BaseCommand {
 		}
 
 		// Overridden documentation methods
-		std::string Args() const { return "x1 y1 z1 radius1 x2 y2 z2 radius1 nTetragons"; }
+		std::string Args() const { return "x1 y1 z1 radius1 x2 y2 z2 radius2 nTetragons"; }
 		std::string Help() const { return "Creates cone object using two sets of coordinates for bases: (x1, y1, z1) - with radius 1 - and (x2, y2, z2) - with radius2. The cone will be divided into given number of tetragons"; }
 };

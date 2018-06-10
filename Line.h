@@ -10,7 +10,7 @@ class Line : public BaseObject {
 		Data3D end;
 
 	public:
-		Line() : BaseObject("line", false) {}
+		Line() : BaseObject("line") {}
 		// Line is constructed with basic properties
 		Line(Data3D start, Data3D end) : BaseObject("line"), start(start), end(end) { GeneratePoints(); }
 
@@ -27,6 +27,18 @@ class Line : public BaseObject {
 			for (int i = 0; i < 3; ++i) {
 				start[i] += vec[i];
 				end[i]   += vec[i];
+			}
+		}
+
+		void RotationShift(Matrix4 transform) {
+			Vector4 pt, pt2;
+			pt.Set(start[0], start[1], start[2]);
+			pt = transform * pt - pt;
+			pt2.Set(end[0], end[1], end[2]);
+			pt2 = transform * pt2 - pt2;
+			for (int i = 0; i < 3; ++i) {
+				start[i] += pt.data[i];
+				end[i]   += pt2.data[i];
 			}
 		}
 
@@ -51,6 +63,7 @@ class Line : public BaseObject {
 				ss >> end[i];
 			}
 			GeneratePoints();
+			Rotate(rotations);
 		}
 
 		Line* Copy() const {

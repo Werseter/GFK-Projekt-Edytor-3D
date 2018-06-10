@@ -12,7 +12,7 @@ class Sphere : public BaseObject {
 		Data3D pos;
 
 	public:
-		Sphere() : BaseObject("sphere", false) {}
+		Sphere() : BaseObject("sphere") {}
 		// Sphere is constructed with basic properties
 		Sphere(Data3D pos, float radius, unsigned int meridians, unsigned int parallels) : BaseObject("sphere"), radius(radius), pos(pos), meridians(meridians), parallels(parallels) {}
 
@@ -24,6 +24,15 @@ class Sphere : public BaseObject {
 		void MoveOrigins(Data3D vec) {
 			for (int i = 0; i < 3; ++i) {
 				pos[i] += vec[i];
+			}
+		}
+
+		void RotationShift(Matrix4 transform) {
+			Vector4 pt;
+			pt.Set(pos[0], pos[1], pos[2]);
+			pt = transform * pt - pt;
+			for (int i = 0; i < 3; ++i) {
+				pos[i] += pt.data[i];
 			}
 		}
 
@@ -45,6 +54,7 @@ class Sphere : public BaseObject {
 			}
 			ss >> radius >> meridians >> parallels;
 			GeneratePoints();
+			Rotate(rotations);
 		}
 
 		Sphere* Copy() const {

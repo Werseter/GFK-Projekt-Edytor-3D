@@ -86,17 +86,31 @@ MyFrame::~MyFrame() {
 
 void MyFrame::GenerateDefaultPanelCasters() {
 	for (int i = 0; i < 3; ++i) {
+		Matrix4 transform0;
+		if (i == 0) {
+			transform0.data[0][0] = transform0.data[1][1] = transform0.data[2][2] = 1;
+		}
+		else if (i == 1) {
+			transform0.data[2][1] = -1;
+			transform0.data[1][2] =  1;
+			transform0.data[0][0] =  1;
+		}
+		else if (i == 2) {
+			transform0.data[2][0] = -1;
+			transform0.data[0][2] =  1;
+			transform0.data[1][1] =  1;
+		}
 
 		Matrix4 transform1;
 		transform1.data[0][0] = 1;
 		transform1.data[1][1] = 1;
 		transform1.data[2][2] = 1;
-		transform1.data[(2+i)%3][3] = -2;
+		transform1.data[2][3] = 2;
 
 		Matrix4 transform2;
-		transform2.data[0][(0+i)%3] = 1;
-		transform2.data[1][(1+i)%3] = 1;
-		transform2.data[3][(2+i)%3] = 1.0 / -2;
+		transform2.data[0][0] = 1;
+		transform2.data[1][1] = 1;
+		transform2.data[3][2] = 1.0 / 2;
 
 		Matrix4 transform3;
 		wxSize panelSize = m_panels[i] -> GetSize();
@@ -105,20 +119,7 @@ void MyFrame::GenerateDefaultPanelCasters() {
 		transform3.data[0][3] =  transform3.data[0][0];
 		transform3.data[1][3] = -transform3.data[1][1];
 
-		if (i == 2) {
-			Matrix4 transform4;
-			float angle = 90 * acosf(-1) / 180;
-			transform4.data[0][0] =  cos(angle);
-			transform4.data[2][2] =  transform4.data[0][0];
-			transform4.data[2][0] =  sin(angle);
-			transform4.data[0][2] = -transform4.data[2][0];
-			transform4.data[1][1] =  1;
-
-			panelCasters.push_back(transform3 * transform2 * transform1 * transform4);
-		}
-		else {
-			panelCasters.push_back(transform3 * transform2 * transform1);
-		}
+		panelCasters.push_back(transform3 * transform2 * transform1 * transform0);
 	}
 }
 

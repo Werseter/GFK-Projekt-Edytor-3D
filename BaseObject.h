@@ -18,7 +18,7 @@ class BaseObject {
 	private:
 		// Each object needs an id used in methods like "delete id"
 		// Static counter is responsible for that
-		static unsigned int idCounter;
+		static int idCounter;
 
 	protected:
 		// Each object has it's id number, type and list of 3D rendering points
@@ -31,7 +31,7 @@ class BaseObject {
 		BaseObject() {}
 		// When creating an object a desired type must be given
 		// Object initializes with id and a type
-		BaseObject(std::string type, bool count = true) : objId(idCounter), type(type) { if (count) ++idCounter;  rotations.data[0][0] = rotations.data[1][1] = rotations.data[2][2] = 1; }
+		BaseObject(std::string type) : objId(idCounter++), type(type) { rotations.data[0][0] = rotations.data[1][1] = rotations.data[2][2] = 1; }
 
 		// Method returning cordinates in a string
 		std::string GetCoordinatesString(Data3D v) const { return "(" + toString(v[0]) + ", " + toString(v[1]) + ", " + toString(v[2]) + ")"; }
@@ -44,39 +44,47 @@ class BaseObject {
 
 		// Method rotating an object
 		void Rotate(Data3D pos, Data3D angles) {
-			float angle;
 			Matrix4 transform1;
-			angle = angles[0] * acosf(-1) / 180;
-			transform1.data[0][0] =  cos(angle);
-			transform1.data[1][1] =  transform1.data[0][0];
-			transform1.data[0][1] =  sin(angle);
-			transform1.data[1][0] = -transform1.data[0][1];
-			transform1.data[2][2] =  1;
+			transform1.data[0][3] = -pos[0];
+			transform1.data[1][3] = -pos[1];
+			transform1.data[2][3] = -pos[2];
+			transform1.data[0][0] =  transform1.data[1][1] = transform1.data[2][2] = 1;
 
+			float angle;
 			Matrix4 transform2;
-			angle = angles[1] * acosf(-1) / 180;
+			angle = angles[0] * acosf(-1) / 180;
 			transform2.data[0][0] =  cos(angle);
-			transform2.data[2][2] =  transform2.data[0][0];
-			transform2.data[2][0] =  sin(angle);
-			transform2.data[0][2] = -transform2.data[2][0];
-			transform2.data[1][1] =  1;
+			transform2.data[1][1] =  transform2.data[0][0];
+			transform2.data[0][1] =  sin(angle);
+			transform2.data[1][0] = -transform2.data[0][1];
+			transform2.data[2][2] =  1;
 
 			Matrix4 transform3;
-			angle = angles[2] * acosf(-1) / 180;
-			transform3.data[1][1] =  cos(angle);
-			transform3.data[2][2] =  transform3.data[1][1];
-			transform3.data[1][2] =  sin(angle);
-			transform3.data[2][1] = -transform3.data[1][2];
-			transform3.data[0][0] =  1;
+			angle = angles[1] * acosf(-1) / 180;
+			transform3.data[0][0] =  cos(angle);
+			transform3.data[2][2] =  transform3.data[0][0];
+			transform3.data[2][0] =  sin(angle);
+			transform3.data[0][2] = -transform3.data[2][0];
+			transform3.data[1][1] =  1;
 
 			Matrix4 transform4;
-			transform4.data[0][3] = pos[0];
-			transform4.data[1][3] = pos[1];
-			transform4.data[2][3] = pos[2];
-			transform4.data[0][0] = transform4.data[1][1] = transform4.data[2][2] = 1;
+			angle = angles[2] * acosf(-1) / 180;
+			transform4.data[1][1] =  cos(angle);
+			transform4.data[2][2] =  transform4.data[1][1];
+			transform4.data[1][2] =  sin(angle);
+			transform4.data[2][1] = -transform4.data[1][2];
+			transform4.data[0][0] =  1;
 
-			Matrix4 transform = transform4 * transform3 * transform2 * transform1;
+			Matrix4 transform5;
+			transform5.data[0][3] = pos[0];
+			transform5.data[1][3] = pos[1];
+			transform5.data[2][3] = pos[2];
+			transform5.data[0][0] = transform5.data[1][1] = transform5.data[2][2] = 1;
 
+			Rotate(transform5 * transform4 * transform3 * transform2 * transform1);
+		}
+
+		void Rotate(Matrix4 transform) {
 			rotations = transform * rotations;
 
 			Vector4 pt1, pt2;
@@ -90,7 +98,10 @@ class BaseObject {
 					point[i + 3] = pt2.data[i];
 				}
 			}
+			RotationShift(transform);
 		}
+
+		virtual void RotationShift(Matrix4 transform) = 0;
 
 		void Move(Data3D vec) {
 			Matrix4 transform1;
@@ -111,6 +122,7 @@ class BaseObject {
 				}
 			}
 			MoveOrigins(vec);
+			
 		}
 
 		virtual void MoveOrigins(Data3D vec) = 0;

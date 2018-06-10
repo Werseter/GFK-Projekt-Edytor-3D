@@ -44,6 +44,7 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 
 	Bind(wxEVT_TEXT_ENTER, &MyFrame::ProcessConsoleInput, this, ID_WXTEXTCTRLCONSOLE);
 	Bind(wxEVT_UPDATE_UI,  &MyFrame::Form_Update, this);
+	Bind(wxEVT_SIZE, &MyFrame::ResizeHandle, this);
 
 	GenerateDefaultPanelCasters();
 
@@ -85,6 +86,7 @@ MyFrame::~MyFrame() {
 }
 
 void MyFrame::GenerateDefaultPanelCasters() {
+	panelCasters.clear();
 	for (int i = 0; i < 3; ++i) {
 		Matrix4 transform0;
 		if (i == 0) {
@@ -250,4 +252,11 @@ void MyFrame::Draw() {
 
 void MyFrame::Form_Update(wxUpdateUIEvent& WXUNUSED(e)) {
 	Draw();
+}
+
+void MyFrame::ResizeHandle(wxSizeEvent& e) {
+	GenerateDefaultPanelCasters();
+	Update();
+	Draw();
+	e.Skip();
 }

@@ -10,6 +10,7 @@ class Line : public BaseObject {
 		Data3D end;
 
 	public:
+		Line() : BaseObject("line", false) {}
 		// Line is constructed with basic properties
 		Line(Data3D start, Data3D end) : BaseObject("line"), start(start), end(end) { GeneratePoints(); }
 
@@ -27,5 +28,32 @@ class Line : public BaseObject {
 				start[i] += vec[i];
 				end[i]   += vec[i];
 			}
+		}
+
+		std::string GetSaveData() const {
+			std::stringstream data;
+			data << BaseObject::GetSaveData();
+			for (float x : start) data << x << " ";
+			for (float x : end) data << x << " ";
+			data << std::endl;
+			return data.str();
+		}
+
+		void SetData(std::string rotationsString, std::string dataString) {
+			BaseObject::SetData(rotationsString, dataString);
+			std::stringstream ss(dataString);
+			start = Data3D(3);
+			end   = Data3D(3);
+			for (int i = 0; i < 3; ++i) {
+				ss >> start[i];
+			}
+			for (int i = 0; i < 3; ++i) {
+				ss >> end[i];
+			}
+			GeneratePoints();
+		}
+
+		Line* Copy() const {
+			return new Line();
 		}
 };

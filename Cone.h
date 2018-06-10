@@ -17,6 +17,8 @@ class Cone : public BaseObject {
 		unsigned int nTetragons;
 
 	public:
+		Cone() : BaseObject("cone", false) {}
+
 		// Line is constructed with basic properties
 		Cone(Data3D start, Data3D end, float radius1, float radius2, unsigned int nTetragons) : BaseObject("cone"), start(start), end(end), radius1(radius1), radius2(radius2), nTetragons(nTetragons) {}
 
@@ -31,4 +33,31 @@ class Cone : public BaseObject {
 				end[i]   += vec[i];
 			}
 		}
+
+		std::string GetSaveData() const {
+			std::stringstream data;
+			data << BaseObject::GetSaveData();
+			for (float x : start) data << x << " ";
+			for (float x : end) data << x << " ";
+			data << radius1 << " " << radius2 << " " << nTetragons;
+			data << std::endl;
+			return data.str();
+		}
+
+		void SetData(std::string rotationsString, std::string dataString) {
+			BaseObject::SetData(rotationsString, dataString);
+			std::stringstream ss(dataString);
+			start = Data3D(3);
+			end   = Data3D(3);
+			for (int i = 0; i < 3; ++i) {
+				ss >> start[i];
+			}
+			for (int i = 0; i < 3; ++i) {
+				ss >> end[i];
+			}
+			ss >> radius1 >> radius2 >> nTetragons;
+			GeneratePoints();
+		}
+
+		Cone* Copy() const { return new Cone(); }
 };

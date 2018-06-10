@@ -2,6 +2,7 @@
 
 #include "BaseObject.h"
 #include <iostream>
+#include <sstream>
 
 class Box : public BaseObject {
 	protected:
@@ -11,6 +12,7 @@ class Box : public BaseObject {
 		Data3D end;
 
 	public:
+		Box() : BaseObject("box", false) {}
 		// Box is constructed with basic properties
 		Box(Data3D start, Data3D end) : BaseObject("box"), start(start), end(end) { GeneratePoints(); }
 
@@ -39,4 +41,30 @@ class Box : public BaseObject {
 				end[i]   += vec[i];
 			}
 		}
+
+		std::string GetSaveData() const {
+			std::stringstream data;
+			data << BaseObject::GetSaveData();
+			for (float x : start) data << x << " ";
+			for (float x : end) data << x << " ";
+			data << std::endl;
+			return data.str();
+		}
+
+		void SetData(std::string rotationsString, std::string dataString) {
+			BaseObject::SetData(rotationsString, dataString);
+			std::stringstream ss(dataString);
+			start = Data3D(3);
+			end   = Data3D(3);
+			for (int i = 0; i < 3; ++i) {
+				ss >> start[i];
+			}
+			for (int i = 0; i < 3; ++i) {
+				ss >> end[i];
+			}
+			GeneratePoints();
+		}
+
+		Box* Copy() const { return new Box(); }
+		
 };

@@ -25,17 +25,20 @@ class BaseObject {
 		unsigned int objId;
 		std::string type;
 		DataVector points;
+		Matrix4 rotations;
 
 	public:
+		BaseObject() {}
 		// When creating an object a desired type must be given
 		// Object initializes with id and a type
-		BaseObject(std::string type) : objId(idCounter++), type(type) { }
+		BaseObject(std::string type, bool count = true) : objId(idCounter), type(type) { if (count) ++idCounter;  rotations.data[0][0] = rotations.data[1][1] = rotations.data[2][2] = 1; }
 
 		// Method returning cordinates in a string
 		std::string GetCoordinatesString(Data3D v) const { return "(" + toString(v[0]) + ", " + toString(v[1]) + ", " + toString(v[2]) + ")"; }
 		//Method returning rendering data
 		const DataVector* GetData() const { return &points; }
 		unsigned int GetId() const { return objId; }
+		std::string GetType() const { return type; }
 		// Method for printing object's representation
 		virtual std::string Repr() const { return toString(objId) + " " + type + " "; }
 
@@ -73,6 +76,8 @@ class BaseObject {
 			transform4.data[0][0] = transform4.data[1][1] = transform4.data[2][2] = 1;
 
 			Matrix4 transform = transform4 * transform3 * transform2 * transform1;
+
+			rotations = transform * rotations;
 
 			Vector4 pt1, pt2;
 			for (Data3D& point : points) {
@@ -112,4 +117,26 @@ class BaseObject {
 		// Method converting object data into rendering points
 		virtual void GeneratePoints() = 0;
 
+		virtual std::string GetSaveData() const {
+			std::stringstream data;
+			data << type << std::endl;
+			for (int i = 0; i < 4; ++i) {
+				for (int j = 0; j < 4; ++j) {
+					data << rotations.data[i][j] << " ";
+				}
+			}
+			data << std::endl;
+			return data.str();
+		}
+
+		virtual void SetData(std::string rotationsString, std::string dataString) {
+			std::stringstream ss(rotationsString);
+			for (int i = 0; i < 4; ++i) {
+				for (int j = 0; j < 4; ++j) {
+					ss >> rotations.data[i][j];
+				}
+			}
+		}
+
+		virtual BaseObject* Copy() const = 0;
 };

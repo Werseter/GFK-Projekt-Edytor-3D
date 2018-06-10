@@ -3,42 +3,39 @@
 #include "BaseCommand.h"
 #include <wx/filedlg.h>
 #include <wx/log.h>
+#include <fstream>
 
-// save command saving object to a file
+// save command saving objects to a file
 class Save : public BaseCommand {
 	public:
 		// Initializing save command
-		Save(MyFrame* app) : BaseCommand("save", 2, app) {}
+		Save(MyFrame* app) : BaseCommand("save", 1, app) {}
 
-		// Overridden Execute method, saves object to file
+		// Overridden Execute method, saves objects to file
 		bool Execute(std::vector<std::string> args) {
+			wxStreamToTextRedirector redirect(app -> m_textCtrlConsoleOutput);
 			// Open dialog window for saving a file
-			wxFileDialog saveFileDialog(this, wxT("Save XYZ file"), wxT(""), wxT(""), wxT("Geometry file (*.geo)|*.geo"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+			wxFileDialog saveFileDialog(app, wxT("Save XYZ file"), wxT(""), args[1] + ".geo", wxT("Geometry file (*.geo)|*.geo"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
 			// If user changes their mind and chooses cancel
-			if (saveFileDialog.ShowModal() == wxID_CANCEL)
-        return false;
-
+			if (saveFileDialog.ShowModal() == wxID_CANCEL) {
+				std::cout << "Aborted file saving operation" << std::endl;
+				return false;
+			}
 			// Prepare an output stream to write points there
-			wxFileOutputStream output_stream(saveFileDialog.GetPath());
+			std::ofstream out(std::string(saveFileDialog.GetPath()));
 
-			// Get id of an object from arguments
-			unsigned int id = atoi(args[1].c_str());
-			std::vector<BaseObject*>::iterator objIt = std::find_if(app -> geoObjects.begin(), app -> geoObjects.end(), [&id](BaseObject* obj) { if (obj) return obj -> GetId() == id; else return false; });
-
-			if (objIt != app -> geoObjects.end()) {
-				const DataVector* data = (*objIt)->GetData();
-
+			//Save all objects' data to file
+			for (BaseObject* obj : app -> geoObjects) {
+				if (obj != nullptr) {
+					out << obj->GetSaveData();
+				}
 			}
 
-      if (!output_stream.IsOk()) {
-				wxLogError("Cannot save current contents in file '%s'.", saveFileDialog.GetPath());
-				return false;
-     }
-		 return true;
+			return true;
 		}
 
 		// Overridden documentation methods
-		std::string Args() const { return "id file_name"; }
-		std::string Help() const { return "Saves object of given id to file of name file_name"; }
+		std::string Args() const { return "file_name"; }
+		std::string Help() const { return "Saves all objects to file of name file_name"; }
 };

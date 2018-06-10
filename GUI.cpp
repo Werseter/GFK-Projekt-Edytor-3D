@@ -63,6 +63,12 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	commands.push_back(new Rotate(this));
 	commands.push_back(new Save(this));
 	commands.push_back(new Load(this));
+
+	basicGeoObjects.push_back(new Box);
+	basicGeoObjects.push_back(new Cone);
+	basicGeoObjects.push_back(new Cylinder);
+	basicGeoObjects.push_back(new Line);
+	basicGeoObjects.push_back(new Sphere);
 }
 
 MyFrame::~MyFrame() {
@@ -168,23 +174,19 @@ void MyFrame::ProcessConsoleInput(wxCommandEvent& WXUNUSED(e)) {
 		if (args.size() - 1 == (*cmdIt) -> GetArgumentsCount() || -1 == (*cmdIt) -> GetArgumentsCount()) {
 
 			// Check arguments' format
-			if (CheckArgumentsIfIntOrDouble(args)) {
+			if (CheckArgumentsIfIntOrDouble(args) || args[0] == "help" || args[0] == "load" || args[0] == "save") {
 
 				// If all checks went fine then execute function
 				if ((*cmdIt) -> Execute(args)) {
 					for (std::string& arg : args) std::cout << arg << " ";
 					std::cout << std::endl;
 				}
-
-				// If it wasn't possible to execute funtion tell user
-				else std::cout << "Couldn't execute function, check arguments and function help" << std::endl;
-
 			}
 
 			// If arguments had bad format tell user about the right format and print given arguments
 			else {
 				std::cout << "Arguments need to be either integer or double (given arguments:";
-				for (unsigned int i=1; i<args.size(); ++i)
+				for (unsigned int i = 1;  i < args.size(); ++i)
 					std::cout << " " << args[i];
 				std::cout << ")" << std::endl;
 			}

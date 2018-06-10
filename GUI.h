@@ -49,6 +49,7 @@ class MyFrame : public wxFrame {
 
 		std::vector<BaseCommand*> commands;
 		std::vector<BaseObject*>  geoObjects;
+		std::vector<BaseObject*>  basicGeoObjects;
 
 		wxColor drawingColor = wxColor(*wxGREEN);
 		std::vector<const DataVector*> drawingData;

@@ -16,6 +16,7 @@ class Cylinder : public BaseObject {
 		unsigned int nTetragons;
 
 	public:
+		Cylinder() : BaseObject("cylinder", false) {}
 		// Line is constructed with basic properties
 		Cylinder(Data3D start, Data3D end, float radius, unsigned int nTetragons) : BaseObject("cylinder"), start(start), end(end), radius(radius), nTetragons(nTetragons) {}
 
@@ -29,5 +30,34 @@ class Cylinder : public BaseObject {
 				start[i] += vec[i];
 				end[i]   += vec[i];
 			}
+		}
+
+		std::string GetSaveData() const {
+			std::stringstream data;
+			data << BaseObject::GetSaveData();
+			for (float x : start) data << x << " ";
+			for (float x : end) data << x << " ";
+			data << radius << " " << nTetragons;
+			data << std::endl;
+			return data.str();
+		}
+
+		void SetData(std::string rotationsString, std::string dataString) {
+			BaseObject::SetData(rotationsString, dataString);
+			std::stringstream ss(dataString);
+			start = Data3D(3);
+			end   = Data3D(3);
+			for (int i = 0; i < 3; ++i) {
+				ss >> start[i];
+			}
+			for (int i = 0; i < 3; ++i) {
+				ss >> end[i];
+			}
+			ss >> radius >> nTetragons;
+			GeneratePoints();
+		}
+
+		Cylinder* Copy() const {
+			return new Cylinder();
 		}
 };

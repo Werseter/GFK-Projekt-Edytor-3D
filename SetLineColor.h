@@ -16,8 +16,12 @@ class SetLineColor : public BaseCommand {
 			rgb[1] = atoi(args[2].c_str());
 			rgb[2] = atoi(args[3].c_str());
 
-			for (unsigned int i=0; i<rgb.size(); ++i)
-				if (rgb[i]<0 || rgb[i]>255) return false;
+			for (unsigned int i=0; i<rgb.size(); ++i) {
+				if (rgb[i]<0 || rgb[i]>255) {
+					std::cout << "set_line_color: RGB values need to be between 0 and 255" << std::endl;
+					return false;
+				}
+			}
 
 			app->drawingColor.Set(rgb[0], rgb[1], rgb[2]);
 

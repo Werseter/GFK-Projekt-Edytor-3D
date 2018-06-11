@@ -18,6 +18,10 @@ class Delete : public BaseCommand {
 				(*objIt) = nullptr;
 			}
 
+			else {
+				std::cout << "delete: Id not found" << std::endl;
+			}
+
 			app->UpdateObjList();
 			return true;
 		}

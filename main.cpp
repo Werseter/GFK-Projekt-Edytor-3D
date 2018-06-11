@@ -13,5 +13,5 @@ class MyApp : public wxApp {
 
 };
 
-//IMPLEMENT_APP(MyApp);
-wxIMPLEMENT_APP_CONSOLE(MyApp);
+IMPLEMENT_APP(MyApp);
+//wxIMPLEMENT_APP_CONSOLE(MyApp);

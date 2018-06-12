@@ -20,19 +20,19 @@ class Sphere : public BaseObject {
 		std::string Repr() const { return BaseObject::Repr() + GetCoordinatesString(pos) + " " + toString(radius); }
 
 		void GeneratePoints() {
-			const double PI = acos(-1);
-			double diff_1 = PI / meridians;
-			double diff_2 = PI / parallels;
+			const float PI = acosf(-1);
+			float diff_1 = PI / meridians;
+			float diff_2 = PI / parallels;
 
-			for (double phi = 0.0; phi < 2 * PI; phi += PI / meridians) {
-				for (double theta = 0.0; theta < PI; theta += PI / parallels) {
+			for (float phi = 0.0; phi < 2 * PI; phi += PI / meridians) {
+				for (float theta = 0.0; theta < PI; theta += PI / parallels) {
 					Data3D temp(6);
-					temp[0] = radius * cos(phi) * sin(theta) + pos[0];
-					temp[1] = radius * sin(phi) * sin(theta) + pos[1];
-					temp[2] = radius * cos(theta) + pos[2];
-					temp[3] = radius * cos(phi + diff_1) * sin(theta + diff_2) + pos[0];
-					temp[4] = radius * sin(phi + diff_1) * sin(theta + diff_2) + pos[1];
-					temp[5] = radius * cos(theta + diff_2) + pos[2];
+					temp[0] = radius * cosf(phi) * sinf(theta) + pos[0];
+					temp[1] = radius * sinf(phi) * sinf(theta) + pos[1];
+					temp[2] = radius * cosf(theta) + pos[2];
+					temp[3] = radius * cosf(phi + diff_1) * sinf(theta + diff_2) + pos[0];
+					temp[4] = radius * sinf(phi + diff_1) * sinf(theta + diff_2) + pos[1];
+					temp[5] = radius * cosf(theta + diff_2) + pos[2];
 					points.push_back(temp);
 				}
 			}
